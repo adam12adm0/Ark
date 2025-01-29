@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تعلم بايثون</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+
+        .progress-fill {
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+        }
+
+        .code-editor {
+            margin-top: 20px;
+        }
+
+        .CodeMirror {
+            border: 1px solid #ddd;
+            height: 200px;
+        }
+
+        #output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+        }
+
+        .lesson-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .lesson-list li {
+            margin-bottom: 10px;
+        }
+
+        .lesson-list a {
+            display: block;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s;
+        }
+
+        .lesson-list a:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/theme/monokai.min.css">
+</head>
+<body>
+    <header>
+        <h1>تعلم بايثون</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">الرئيسية</a></li>
+                <li><a href="#lessons">الدروس</a></li>
+                <li><a href="#examples">الأمثلة</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- المحتوى سيتم تحميله هنا ديناميكيًا -->
+    </main>
+
+    <footer>
+        <p>&copy; <span id="current-year"></span> جميع الحقوق محفوظة</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.0/mode/python/python.min.js"></script>
+    <script>
+        // بيانات الدروس (يمكن استبدالها بطلب API في المستقبل)
+        const lessons = [
+            { id: 1, title: 'مقدمة في بايثون', content: 'بايثون هي لغة برمجة عالية المستوى، سهلة التعلم وقوية. تتميز بقواعد بسيطة وإنتاجية عالية.' },
+            { id: 2, title: 'المتغيرات والأنواع الأساسية', content: 'المتغيرات هي وسيلة لتخزين البيانات. في بايثون، الأنواع الأساسية تشمل الأعداد الصحيحة، الأعداد العشرية، النصوص، والقيم المنطقية.' },
+            { id: 3, title: 'الهياكل الشرطية والحلقات', content: 'الهياكل الشرطية مثل if-else تسمح باتخاذ قرارات في البرنامج. الحلقات مثل for و while تسمح بتكرار العمليات.' },
+            { id: 4, title: 'الدوال والوحدات', content: 'الدوال هي كتل من الكود قابلة لإعادة الاستخدام. الوحدات هي ملفات تحتوي على تعريفات ومتغيرات بايثون.' },
+            { id: 5, title: 'قواعد البيانات مع بايثون', content: 'يمكن استخدام بايثون للتعامل مع قواعد البيانات مثل SQLite و MySQL و PostgreSQL.' },
+        ];
+
+        // تحميل المحتوى الرئيسي
+        function loadHome() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <h2>مرحبًا بك في تطبيق تعلم بايثون</h2>
+                <section class="progress">
+                    <h3>تقدمك</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 30%;"></div>
+                    </div>
+                    <p>لقد أكملت 30% من الدورة</p>
+                </section>
+                <section class="lessons">
+                    <h3>الدروس</h3>
+                    <ul class="lesson-list">
+                        ${lessons.map(lesson => `
+                            <li><a href="#" onclick="loadLesson(${lesson.id})">${lesson.title}</a></li>
+                        `).join('')}
+                    </ul>
+                </section>
+            `;
+        }
+
+        // تحميل درس محدد
+        function loadLesson(lessonId) {
+            const lesson = lessons.find(l => l.id === lessonId);
+            if (!lesson) return;
+
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <h2>${lesson.title}</h2>
+                <section class="lesson-content">
+                    <p>${lesson.content}</p>
+                </section>
+                <section class="examples">
+                    <h3>الأمثلة</h3>
+                    <div class="example">
+                        <h4>مثال 1</h4>
+                        <pre><code class="python">
+print("مرحبا بالعالم!")
+                        </code></pre>
+                    </div>
+                </section>
+                <section class="code-editor">
+                    <h3>جرب بنفسك</h3>
+                    <textarea id="code-area">
+# اكتب الكود الخاص بك هنا
+print("مرحبا بالعالم!")
+                    </textarea>
+                    <button id="run-code">تشغيل الكود</button>
+                    <div id="output"></div>
+                </section>
+            `;
+
+            // إعداد محرر الكود
+            const editor = CodeMirror.fromTextArea(document.getElementById("code-area"), {
+                mode: "python",
+                theme: "monokai",
+                lineNumbers: true
+            });
+
+            // إعداد زر تشغيل الكود
+            document.getElementById("run-code").addEventListener("click", function() {
+                const code = editor.getValue();
+                // هنا يمكنك إضافة منطق لتنفيذ الكود (قد يتطلب استخدام خدمة خارجية)
+                document.getElementById("output").innerText = "نتيجة تنفيذ الكود ستظهر هنا";
+            });
+        }
+
+        // تحميل الصفحة الرئيسية عند بدء التطبيق
+        window.onload = function() {
+            loadHome();
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        };
+
+        // إعداد التنقل
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                if (href === '#home') {
+                    loadHome();
+                } else if (href === '#lessons') {
+                    loadHome(); // يمكن تعديل هذا لعرض قائمة الدروس فقط إذا أردت
+                } else if (href === '#examples') {
+                    // يمكن إضافة صفحة أمثلة منفصلة هنا
+                }
+            });
+        });
+    </script>
+</body>
+</html>
